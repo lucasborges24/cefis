@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UserModule } from './user/user.module';
       synchronize: process.env.NODE_ENV !== 'production',
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
