@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +19,14 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const userExists = await this.usersRepository.findOne({
+      where: { email: createUserDto.email },
+    });
+
+    if (userExists) {
+      throw new ConflictException('User already exists');
+    }
+
     const passwordHashed = await bcrypt.hash(
       createUserDto.password,
       this.SALT_ROUNDS,
@@ -30,13 +42,31 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findUserById(id: number): Promise<UserEntity> {
+    const user: UserEntity = await this.usersRepository.findOne({
+      where: { id },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  async findUserByEmail(email: string): Promise<UserEntity> {
+    const user: UserEntity = await this.usersRepository.findOne({
+      where: { email },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    await this.usersRepository.update(id, updateUserDto);
+    return this.usersRepository.findOne({
+      where: { id },
+    });
   }
 
   async remove(id: number): Promise<void> {
