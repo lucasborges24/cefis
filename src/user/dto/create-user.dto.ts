@@ -1,4 +1,11 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { UserType } from '../enum/user-role.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -20,5 +27,8 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(63)
+  @IsEnum(UserType, {
+    message: `Invalid role. Valids roles are ${Object.values(UserType)}`,
+  })
   role: string;
 }
