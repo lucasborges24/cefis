@@ -5,9 +5,11 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity({ name: 'course' })
+@Unique(['title', 'teacherId'])
 export class CourseEntity {
   @PrimaryGeneratedColumn()
   id: number;
