@@ -19,7 +19,10 @@ export class CourseService {
     private usersRepository: Repository<UserEntity>,
   ) {}
 
-  async create(createCourseDto: CreateCourseDto, teacherId: number) {
+  async create(
+    createCourseDto: CreateCourseDto,
+    teacherId: number,
+  ): Promise<CourseEntity> {
     const user = await this.usersRepository.findOne({
       where: { id: teacherId },
     });
