@@ -45,20 +45,24 @@ export class CourseService {
     });
   }
 
-  findAll() {
-    return `This action returns all course`;
+  async findAll(limit: number = 10, page: number = 1): Promise<CourseEntity[]> {
+    return this.coursesRepository.find({
+      relations: ['teacher'],
+      take: limit,
+      skip: limit * (page - 1),
+    });
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} course`;
   }
 
-  update(id: number, updateCourseDto: UpdateCourseDto) {
+  async update(id: number, updateCourseDto: UpdateCourseDto) {
     console.log(id, updateCourseDto);
     return `This action updates a #${id} course`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} course`;
   }
 }

@@ -6,12 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { Roles } from '../decorators/roles.decorator';
 import { userId } from '../decorators/user-id.decorator';
 import { UserType } from '../user/enum/user-role.enum';
 import { CourseService } from './course.service';
 import { CreateCourseDto } from './dto/create-course.dto';
+import { ReturnAllCoursesDto } from './dto/return-all-courses.dto';
 import { ReturnCourseDto } from './dto/return-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
@@ -31,8 +33,15 @@ export class CourseController {
   }
 
   @Get()
-  async findAll() {
-    return this.courseService.findAll();
+  async findAll(@Query('limit') limit: number, @Query('page') page: number) {
+    const data = (await this.courseService.findAll(limit, page)).map(
+      (CourseEntity) => new ReturnAllCoursesDto(CourseEntity),
+    );
+    return {
+      page,
+      limit,
+      data,
+    };
   }
 
   @Get(':id')
