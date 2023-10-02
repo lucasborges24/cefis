@@ -9,7 +9,8 @@ services:
       - mysql
     environment:
       NODE_ENV: development
-      DATABASE_HOST: localhost
+      DATABASE_CONNECTION: mysql
+      DATABASE_HOST: mysql
       DATABASE_PORT: 3306
       DATABASE_USER: user
       DATABASE_PASSWORD: password
