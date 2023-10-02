@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../user/entities/user.entity';
@@ -54,15 +55,48 @@ export class CourseService {
   }
 
   async findOne(id: number) {
-    return `This action returns a #${id} course`;
+    return this.coursesRepository.findOne({
+      where: { id },
+      relations: ['teacher'],
+    });
   }
 
-  async update(id: number, updateCourseDto: UpdateCourseDto) {
-    console.log(id, updateCourseDto);
-    return `This action updates a #${id} course`;
+  async update(
+    id: number,
+    updateCourseDto: UpdateCourseDto,
+    teacherId: number,
+  ) {
+    const course = await this.coursesRepository.findOne({
+      where: { id },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    if (course.teacherId !== teacherId) {
+      throw new UnauthorizedException('You are not the owner of this course');
+    }
+
+    return this.coursesRepository.save({
+      ...course,
+      ...updateCourseDto,
+    });
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} course`;
+  async remove(id: number, teacherId: number) {
+    const course = await this.coursesRepository.findOne({
+      where: { id },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    if (course.teacherId !== teacherId) {
+      throw new UnauthorizedException('You are not the owner of this course');
+    }
+
+    return this.coursesRepository.delete(id);
   }
 }

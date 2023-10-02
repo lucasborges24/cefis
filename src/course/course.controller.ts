@@ -53,12 +53,13 @@ export class CourseController {
   async update(
     @Param('id') id: string,
     @Body() updateCourseDto: UpdateCourseDto,
+    @userId() teacherId: number,
   ) {
-    return this.courseService.update(+id, updateCourseDto);
+    return this.courseService.update(+id, updateCourseDto, teacherId);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.courseService.remove(+id);
+  async remove(@Param('id') id: string, @userId() teacherId: number) {
+    return this.courseService.remove(+id, teacherId);
   }
 }
