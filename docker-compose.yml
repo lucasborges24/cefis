@@ -1,6 +1,23 @@
 version: '3'
 
 services:
+  mysql:
+    image: mysql:8.1
+    container_name: mysql_db
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: api
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./mysql:/var/lib/mysql
+
   nestjs:
     build: .
     ports:
@@ -18,18 +35,7 @@ services:
       JWT_SECRET: secret
       JWT_EXPIRES_IN: 3d
 
-  mysql:
-    image: mysql:8.1
-    container_name: mysql_db
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: api
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - '3306:3306'
-    volumes:
-      - ./mysql:/var/lib/mysql
+
 
 volumes:
   mysql:
