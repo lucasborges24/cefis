@@ -19,11 +19,20 @@ A versão em produção da API está disponível em: cefisapi-58rcxozg.b4a.run
 
 Para rodar o projeto com Docker, é necessário ter o Docker instalado na máquina. Para instalar o Docker, siga as instruções do site oficial: https://docs.docker.com/get-docker/
 
-Após instalar o Docker, clone o repositório do projeto e execute o comando abaixo na raiz do projeto:
+Após instalar o Docker, clone o repositório do projeto
+
+   ```sh
+   git clone https://github.com/lucasborges24/cefis
+   cd cefis
+   ```
+
+e execute o comando abaixo na raiz do projeto:
 
 ```sh
 docker-compose up --build
 ```
+
+Ao fim do processamento, a aplicacão estará disponível no endereço `http://localhost:3000`
 
 ## Rotas da API
 
